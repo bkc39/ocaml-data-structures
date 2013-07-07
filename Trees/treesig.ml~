@@ -1,0 +1,17 @@
+module type TREE = sig
+  type 'a t
+
+  (* Traversals *)
+  val dfs       : 'a t -> 'a list
+  val bfs       : 'a t -> 'a list
+  val postorder : 'a t -> 'a list
+
+  (* Search *)
+  val find      : 'a t -> 'a -> 'a t
+  val show      : 'a t -> unit
+  val to_string : 'a t -> string
+
+  (* Conversion to other collections *)
+  val to_set    : 'a t -> Set.S.t
+  val 
+end
