@@ -20,7 +20,7 @@ type <code>make</code> at the terminal to build the directory.
 
 Documentation for each of the module signatures can be found in the
 <code>doc</code>. The documentation is in <code>.md</code> format and
-can be viewed online at [https://github.com/bkc39/OCaml/DataStructures/doc]
+can be viewed online at https://github.com/bkc39/OCaml/DataStructures/doc
 
 ## Features
 
