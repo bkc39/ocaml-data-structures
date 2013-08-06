@@ -31,8 +31,8 @@ module type TREE = sig
   val postorder : t -> elt list
 
   (* display *)
-  val show      : t -> unit
-  val to_string : t -> string
+  val show      : (elt -> string) -> t -> unit
+  val to_string : (elt -> string) -> t -> string
 
   (* Conversion to other collections *)
   (* val to_set    : t -> Set.S *)

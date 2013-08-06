@@ -65,13 +65,24 @@ module RedBlackTree : Tree.Make = functor (M : Tree.ORDERED) -> struct
 
 (****************************** For Printing **********************************)
 
-  let rec print_height_width = function
-    | L | N(_,_,L,L) -> (0,1)
-    | N(_,_,r,l) -> begin
-      let (lh,lw) = print_height_width l in
-      let (rh,rw) = print_height_width r in
-      (6+lh+rh, 3+(max lw rw))
+  let rec take lst n = match lst with
+    | []    -> if n > 0 then raise (Function_Error "to_string: index") else []
+    | x::xs -> x::(take xs (n-1))
+
+  let rec drop lst n = if n=0 then lst else drop (List.tl lst) (n-1)
+
+  let rec reverse str =
+    if String.length str = 0 then ""
+    else begin
+      let len = String.length str in
+      let last = Char.escaped (String.get str (len-1)) in
+      let rest = reverse (String.sub str 1 (len-1))
+      last^rest
     end
+
+  let rec print_help lst n =
+    if List.length < n then raise (Function_Error "to_string: internal error")
+    else (take lst n)::(print_help (drop lst n) (2*n))
 
 (******************************************************************************)
 
@@ -92,7 +103,7 @@ module RedBlackTree : Tree.Make = functor (M : Tree.ORDERED) -> struct
     | L -> false
 
   let add t x = match insert t x with
-    | N(_,v,l,r) -> N(B,v,l,r)
+     | N(_,v,l,r) -> N(B,v,l,r)
     | L          ->
       raise (Function_Error "add: element insertion returned empty tree")
 
@@ -121,11 +132,11 @@ module RedBlackTree : Tree.Make = functor (M : Tree.ORDERED) -> struct
 
   let postorder t = post [] t
 
-  let show = function
-    | L          -> ()
-    | N(_,v,l,r) -> failwith "TODO"
+  let to_string print t =
+    let s = List.fold_left (fun a x -> x^"\n"^a) "" (List.map print (bfs t)) in
+    reverse s
 
-  let to_string t = ""
+  let show f t = print_endline (to_string f t)
 
   let to_array t = Array.of_list (bfs t)
 end
