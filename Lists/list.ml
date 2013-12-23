@@ -197,17 +197,8 @@ module ContList = struct
       merge f xs ys (fun zs -> k (if (f x y) > 0 then x::y::zs else y::x::zs))
     end
 
-  (* Quicksort *)
-  let rec sort f xs k = match xs with
-    | [] -> k []
-    | x::xs -> begin
-      partition (fun y -> (f x y) > 0) xs (fun (lt,gt) ->
-        sort f lt (fun slt -> sort f gt (fun sgt ->
-          append lt [x] (fun st -> append st gt (fun rs -> k rs)))))
-    end
-
   (* Randomized Quicksort *)
-  let rec stable_sort f xs k = match xs with
+  let rec sort f xs k = match xs with
     | [] -> k []
     | _  -> begin
       length xs (fun l -> nth xs (Random.int l) (fun x ->
@@ -215,9 +206,18 @@ module ContList = struct
         | None   -> failwith "stable_sort: Out of bounds"
         | Some x -> begin
           partition (fun y -> (f x y) > 0) xs (fun (lt,gt) ->
-            stable_sort f lt (fun slt -> stable_sort f gt (fun sgt ->
+            sort f lt (fun slt -> sort f gt (fun sgt ->
               append lt [x] (fun st -> append st gt (fun rs -> k rs)))))
         end))
+    end
+
+  (* Quicksort *)
+  let rec stable_sort f xs k = match xs with
+    | [] -> k []
+    | x::xs -> begin
+      partition (fun y -> (f x y) > 0) xs (fun (lt,gt) ->
+        stable_sort f lt (fun slt -> stable_sort f gt (fun sgt ->
+          append lt [x] (fun st -> append st gt (fun rs -> k rs)))))
     end
 
   (* Mergesort *)
